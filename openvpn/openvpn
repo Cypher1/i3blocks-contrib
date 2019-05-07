@@ -78,7 +78,7 @@ sub print_output {
                     # Get interface from config file
                     $current_config_path = $1;
                     # Remove unwanted escape chars
-                    $interface = 'null';
+                    $interface = 'tun0';
                     # Get configuration name
                     if ($current_config_path =~ /(\w+).conf/) {
                         $current_config_name=$1;
@@ -86,7 +86,8 @@ sub print_output {
                         $current_config_name='unknown';
                     }
 
-                    $current_config_path = "$config_prefix/$current_config_path";
+                    # TODO(jopra): Conditionally skip this if starts with /
+                    #$current_config_path = "$config_prefix/$current_config_path";
 
                     # Get OpenVPN interface device name
                     open(CONFIG, '<', $current_config_path) or die "Can't read config file '$current_config_path': $!\n";
@@ -96,6 +97,7 @@ sub print_output {
                             $interface=$1;
                             last;
                         }
+                        print "$_";
                     }
                     close(CONFIG);
                     # check if interface exist
@@ -121,9 +123,10 @@ sub print_output {
     my $short_status;
     if ($vpn_found == 1) {
         $names = join('/', @config_name);
-        $short_status='up';
+        $short_status='🏢';
     } else {
-        $short_status='down';
+        $short_status='🏠';
+        print "HERE";
         $names = $short_status;
     }
 
