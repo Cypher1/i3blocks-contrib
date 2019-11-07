@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+repo="$1"
+branch="$2"
+
+FAILING_COLOR=${FAILING_COLOR:-"#FF0000"}
+PASSING_COLOR=${PASSING_COLOR:-"#00FF00"}
+
+url="https://travis-ci.org/${repo}.svg?branch=${branch}"
+file=mktemp
+out=$(wget -O $file "$url")
+result=$(cat $file | sed "s/<[^<>]*>/|/g" | sed "s/||*/ /g" | sed "s/ *[a-z]\+ [a-z]\+ \([a-z]\+\) [a-z]\+ */\1/")
+color="$FAILING_COLOR"
+
+if [[ $result =~ ^passing$ ]]
+then
+  color="$PASSING_COLOR"
+fi
+
+text="$repo: $branch $result"
+echo -e "$text"
+echo -e "$text"
+echo $color
+
+exit 1
