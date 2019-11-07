@@ -126,7 +126,6 @@ sub print_output {
         $short_status='🏢';
     } else {
         $short_status='🏠';
-        print "HERE";
         $names = $short_status;
     }
 
